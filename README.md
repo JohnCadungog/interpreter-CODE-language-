@@ -1,4 +1,4 @@
-**INTERPRETER PROJECT APPLICATION**
+#**INTERPRETER PROJECT APPLICATION**
 
 making CODE interpreter using java
 
@@ -10,7 +10,7 @@ Language Specification of CODE Programming Language
 It was developed by a group of students enrolled in the Programming Languages course. CODE is a pure interpreter.
 Sample Program:
 
-# this is a sample program in CODE
+ this is a sample program in CODE
               BEGIN CODE
                 INT x, y, z=5
                 CHAR a_1=’n’
