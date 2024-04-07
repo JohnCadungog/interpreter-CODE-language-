@@ -244,17 +244,18 @@ public class Lexer {
     private Token getEscapeCodeToken() {
         int start = position;
         int lineCol = column;
-    
+
         while (!Character.isWhitespace(current()))
             next(1);
-    
+
         int length = position - start;
         String text = code.substring(start, start + length);
         Object val = null;
-    
-        String escapeSequencePattern = "\\[\\[\\]\\&\\$#\\]\\]";
+
+        String escapeSequencePattern = "^\\[[\\]\\[\\&\\$\\#]\\]$";
+//        String escapeSequencePattern = "\\[\\[\\]\\&\\$#\\]\\]";
         Pattern escapeRegex = Pattern.compile(escapeSequencePattern);
-    
+
         Matcher matcher = escapeRegex.matcher(text);
         if (matcher.matches()) {
             val = text.charAt(1);

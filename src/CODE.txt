@@ -1,0 +1,8 @@
+
+BEGIN CODE
+    INT charena = 5*5+1*9
+
+    DISPLAY: charena
+END CODE
+
+
