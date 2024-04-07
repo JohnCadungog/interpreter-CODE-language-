@@ -1,5 +1,8 @@
 package Analysis.Tree.Statement;
 
-public class StatementNode {
-    
+
+
+import Analysis.Tree.ASTNode;
+
+public abstract class StatementNode extends ASTNode {
 }

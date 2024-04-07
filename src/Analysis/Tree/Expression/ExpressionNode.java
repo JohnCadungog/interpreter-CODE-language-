@@ -1,5 +1,8 @@
 package Analysis.Tree.Expression;
 
-public class ExpressionNode {
-    
+import Analysis.Type.*;
+import Analysis.Tree.ASTNode;
+
+public abstract class ExpressionNode extends ASTNode {
+    // Any additional members or methods can be added here if needed
 }
