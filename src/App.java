@@ -6,6 +6,7 @@ import Analysis.Interpreter;
 // import Analysis.Syntax.Lexer;
 // import Analysis.Type.TokenType;
 
+
 public class App {
     public static void main(String[] args) {
         String codeFilePath = "D:\\School\\3rd year\\2nd Sem\\Programming  Language\\interpreter V2\\interpreter(CODE language)\\src\\CODE.txt"; // Update this with the path to your text file

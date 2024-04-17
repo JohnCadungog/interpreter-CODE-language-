@@ -1,8 +1,11 @@
-
 BEGIN CODE
-    INT charena = 5*5+1*9
 
-    DISPLAY: charena
+
+INT xyz, abc=100
+xyz= ((abc *5)/10 + 110)
+DISPLAY: [[] & xyz & []]
+
+
+
+
 END CODE
-
-

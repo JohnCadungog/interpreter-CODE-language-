@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 public class Lexer {
     private final String code;
-    private int position;
-    private int line, column;
+    private int position; // Current position in the source code
+    private int line, column; // Current line and column in the source code
 
     public Lexer(String code) {
         this.code = code;
@@ -23,32 +23,34 @@ public class Lexer {
 
     private char current() {
         return peek(0);
-    }
+    } // Returns the current character
 
     private char lookAhead() {
         return peek(1);
-    }
+    } // Returns the next character
 
     private char peek(int offset) {
         int index = position + offset;
         if (index >= code.length())
-            return '\0';
-        return code.charAt(index);
+            return '\0';   // Returns null character if end of code is reached
+        return code.charAt(index); // Returns the character at the current position + offset
     }
 
     private void next(int offset) {
         position += offset;
-        column += offset;
+        column += offset; // Moves the position and column forward by the given offset
     }
 
     private void newLine() {
-        line++;
+        line++;        // Moves to the next line and resets the column
         column = 1;
-        next(1);
+        next(1);   // Moves the position forward by 1
     }
 
     public Token getToken() {
+        // Main method to get the next token from the source code
         while (position < code.length()) {
+            // Handles different types of tokens based on the current character
             if (Character.isLetter(current()))
                 return getKeywordOrDataTypeOrIdentifierToken();
 
@@ -145,6 +147,7 @@ public class Lexer {
 
     
     private Token getKeywordOrDataTypeOrIdentifierToken() {
+        // Handles identifiers, keywords, and data types
         int start = position;
         int lineCol = column;
     
@@ -158,6 +161,7 @@ public class Lexer {
     }
     
     private Token getCharacterLiteralToken() {
+        // Handles character literals
         int start = position;
         int lineCol = column;
     
@@ -181,6 +185,7 @@ public class Lexer {
         return new Token(TokenType.ERROR, text, "Invalid CHAR literal.", line, lineCol);
     }
     private Token getBooleanOrStringLiteralToken() {
+        // Handles boolean and string literals
         int start = position;
         int lineCol = column;
     
@@ -211,6 +216,7 @@ public class Lexer {
     }
       
     private Token getNumberLiteralToken() {
+        // Handles number literals (integer and float)
         boolean isFloat = current() == '.';
     
         int start = position;
@@ -242,6 +248,7 @@ public class Lexer {
         return new Token(TokenType.ERROR, text, "Invalid Number.", line, lineCol);
     }
     private Token getEscapeCodeToken() {
+        // Handles escape codes
         int start = position;
         int lineCol = column;
 

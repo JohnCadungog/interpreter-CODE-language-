@@ -25,6 +25,7 @@ public class Interpreter {
 
     public Interpreter(String code) throws Exception{
         Lexer lex = new Lexer(code);
+
         Parser parser = new Parser(lex);
         Semantic semantic = new Semantic();
 

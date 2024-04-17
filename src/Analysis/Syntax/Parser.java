@@ -24,68 +24,105 @@ public class Parser {
     }
 
     public ProgramNode parseProgram(TokenType tokenType) throws Exception {
+        // Skip any leading newlines to find the start of the program
         while (matchToken(TokenType.NEWLINE))
             consumeToken(TokenType.NEWLINE);
 
+        // Consume the BEGIN token and the tokenType token to mark the start of the program
         consumeToken(TokenType.BEGIN);
         consumeToken(tokenType);
 
+        // Skip any newlines after the program start to find the first statement
         while (matchToken(TokenType.NEWLINE))
             consumeToken(TokenType.NEWLINE);
 
+        // Parse all statements until the END token is encountered
         List<StatementNode> statements = parseStatements();
 
+        // Skip any newlines before the program end to find the END token
         while (matchToken(TokenType.NEWLINE))
             consumeToken(TokenType.NEWLINE);
 
+        // Consume the END token and the tokenType token to mark the end of the program
         consumeToken(TokenType.END);
         consumeToken(tokenType);
 
+        // Skip any newlines after the program end to find the end of the file or code block
         while (matchToken(TokenType.NEWLINE))
             consumeToken(TokenType.NEWLINE);
 
+        // If the tokenType is CODE, consume the ENDOFFILE token to mark the end of the file
         if (tokenType == TokenType.CODE)
             consumeToken(TokenType.ENDOFFILE);
 
+        // Return a new ProgramNode containing all parsed statements
         return new ProgramNode(statements);
     }
 
+
+    // This function parses statements in the code and returns a list representing them as abstract syntax tree (AST) nodes.
     private List<StatementNode> parseStatements() throws Exception {
+
+        // Create an empty list to store the parsed statements (represented as AST nodes)
         List<StatementNode> statementList = new ArrayList<>();
 
+        // Loop continues as long as the current token is not of type END (indicating the end of the program)
         while (!matchToken(TokenType.END)) {
+
+            // Check for different data type keywords (int, float, char, bool)
             if (matchToken(TokenType.INT) || matchToken(TokenType.FLOAT) ||
                     matchToken(TokenType.CHAR) || matchToken(TokenType.BOOL)) {
-                if (canDeclare)
+
+                // If variable declarations are allowed at this point (based on canDeclare flag)
+                if (canDeclare) {
+                    // Parse the variable declaration statement and add it to the list
                     statementList.add(parseVariableDeclarationStatement());
-                else
+                } else {
+                    // Throw an exception if variable declaration is not allowed here based on current token's line and column
                     throw new Exception("(" + currentToken.getLine() + "," + currentToken.getColumn() + "): Invalid syntax.");
+                }
             } else if (matchToken(TokenType.IDENTIFIER)) {
+                // Set canDeclare to false (since identifiers are typically used in assignments)
                 canDeclare = false;
+                // Parse the assignment statement and add it to the list
                 statementList.add(parseAssignmentStatement());
             } else if (matchToken(TokenType.DISPLAY)) {
+                // Set canDeclare to false (since display statements don't allow variable declarations before)
                 canDeclare = false;
+                // Parse the display statement and add it to the list
                 statementList.add(parseDisplayStatement());
             } else if (matchToken(TokenType.SCAN)) {
+                // Set canDeclare to false (similar to display statements)
                 canDeclare = false;
+                // Parse the scan statement and add it to the list
                 statementList.add(parseScanStatement());
             } else if (matchToken(TokenType.IF)) {
+                // Set canDeclare to false (since if statements don't allow variable declarations before)
                 canDeclare = false;
+                // Parse the if statement and add it to the list
                 statementList.add(parseIfStatement());
             } else if (matchToken(TokenType.WHILE)) {
+                // Set canDeclare to false (similar to if statements)
                 canDeclare = false;
+                // Parse the while statement and add it to the list
                 statementList.add(parseWhileStatement());
-            } else if (matchToken(TokenType.ENDOFFILE))
+            } else if (matchToken(TokenType.ENDOFFILE)) {
+                // Throw an exception if the end of file is reached but a missing "End" statement is detected (based on current token's line and column)
                 throw new Exception("(" + currentToken.getLine() + "," + currentToken.getColumn() + "): Missing End Statement.");
-            else
+            } else {
+                // If none of the expected tokens matched, throw an exception with the current token's information (line, column, and code)
                 throw new Exception("(" + currentToken.getLine() + "," + currentToken.getColumn() + "): Invalid syntax \"" + currentToken.getCode() + "\".");
+            }
 
+            // Keep consuming newline tokens (ignoring empty lines) after a statement is parsed
             while (matchToken(TokenType.NEWLINE))
                 consumeToken(TokenType.NEWLINE);
         }
 
+        // Return the list containing the parsed statements as AST nodes
         return statementList;
     }
+
 
     private StatementNode parseVariableDeclarationStatement() {
         try {
